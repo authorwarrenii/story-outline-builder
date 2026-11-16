@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Outline Builder</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 16px;
+        }
+        h2 {
+            color: #f5c518;
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        p.sub {
+            text-align: center;
+            color: #a0a0a0;
+            font-size: 13px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            padding: 18px;
+            border-radius: 10px;
+        }
+        label {
+            display: block;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #bb86fc;
+            font-size: 14px;
+        }
+        textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            color: #ffffff;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .btn-main {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            background-color: #bb86fc;
+            color: #121212;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-main:active {
+            background-color: #9965f4;
+        }
+        #resultBox {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #252525;
+            border-left: 4px solid #f5c518;
+            border-radius: 6px;
+        }
+        .success-msg {
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .ai-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .ai-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background-color: #333;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid #444;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Story Outline Builder</h2>
+    <p class="sub">Fill in your story details to build a master AI prompt.</p>
+
+    <div class="card">
+        <label for="genre">Choose Genre:</label>
+        <select id="genre">
+            <option value="High Fantasy / Adventure">High Fantasy / Adventure</option>
+            <option value="Romance / Contemporary">Romance / Contemporary</option>
+            <option value="Romantasy (Romantic Fantasy)">Romantasy (Romantic Fantasy)</option>
+            <option value="Dark Fantasy / Mystery">Dark Fantasy / Mystery</option>
+            <option value="Isekai / Dream World">Isekai / Dream World</option>
+            <option value="Sci-Fi / Dystopian">Sci-Fi / Dystopian</option>
+            <option value="Thriller / Suspense">Thriller / Suspense</option>
+            <option value="Horror / Supernatural">Horror / Supernatural</option>
+            <option value="Historical Fiction">Historical Fiction</option>
+            <option value="Slice of Life / Drama">Slice of Life / Drama</option>
+        </select>
+
+        <label for="characters">Characters & World Notes:</label>
+        <textarea id="characters" rows="5" placeholder="Enter your main characters, villains, and setting..."></textarea>
+
+        <label for="plot">Main Plot / Ending Twist:</label>
+        <textarea id="plot" rows="3" placeholder="What is the main conflict or ending twist?"></textarea>
+
+        <button class="btn-main" onclick="buildPrompt()">Create & Copy Story Prompt</button>
+
+        <div id="resultBox">
+            <div class="success-msg">Copied to clipboard! Tap an AI below and paste it:</div>
+            <div class="ai-links">
+                <a href="https://chatgpt.com" target="_blank" class="ai-btn">Open ChatGPT</a>
+                <a href="https://google.com" target="_blank" class="ai-btn">Open Gemini</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function buildPrompt() {
+            const genre = document.getElementById('genre').value;
+            const characters = document.getElementById('characters').value.trim();
+            const plot = document.getElementById('plot').value.trim();
+
+            if (!characters && !plot) {
+                alert("Please enter some character notes or a plot idea first.");
+                return;
+            }
+
+            const finalPrompt = `Act as a professional story architect and novelist. Create a detailed, chapter-by-chapter story outline using the details below.
+
+GENRE: ${genre}
+
+CHARACTERS & WORLD:
+${characters || "Not specified"}
+
+CORE PLOT & ENDING:
+${plot || "Not specified"}
+
+Please organize the outline into Act I, Act II, and Act III, with clear bullet points for major plot twists, character development, and pacing.`;
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(finalPrompt).then(() => {
+                document.getElementById('resultBox').style.display = 'block';
+            }).catch(() => {
+                // Fallback for older Android WebViews
+                const tempInput = document.createElement("textarea");
+                tempInput.value = finalPrompt;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+                document.getElementById('resultBox').style.display = 'block';
+            });
+        }
+    </script>
+
+</body>
+</html>
